@@ -60,6 +60,7 @@ commit을 취소한 내용을 새로운 버전으로 만든다.
 7.commit여러 옵션들
 git commit -a(--all)
 삭제하거나 수정한 파일을 자동으로 stage에 올린다. 
+중요한것!! 아직 한번도 add하지 않은 파일은 add 되지 않는다!
 
 git commit -m(--message) (메세지)
 -뒤에 오는 message를 eidtor에 띄우지 않고 바로 작성한다. 

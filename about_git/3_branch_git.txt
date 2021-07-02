@@ -1,0 +1,75 @@
+파일을 수정할 때, 파일의 수정이 순차적으로만 진행되는 것은 아님
+->다른 내용의 수정본이 필요할 수 있다. -> 그러다 두 개의 분기(branch)를 합쳐야 할 수도 있다.
+이러한 문제를 git의 branch시스템을 통하여 해결할 수 있다.
+
+1.branch의 목록을 볼때
+git branch
+처음 존재하는 branch = master 
+현재 쓰고 있는 branch에는 *이 붙는다
+
+2.branch를 생성할 때
+git branch (이름)
+
+3.branch 바꿀때
+git checkout (이름)
+
+4.branch를 삭제할 때
+git branch -d
+
+5.병합하지 않은 branch를 강제 삭제할 때
+git branch -D
+
+6.branch를 생성하고 전환까지 할 때q
+git checkout -b (branch이름)
+
+7.git log를 모든 branch로 보고 싶을 때
+git log --branches --decorate
+이렇게 하면 commit id옆에 어떤 branch의 최신버전인지가 나옴
+여기서 (HEAD->branch이름)은 현재 쓰고 있는 branch를 나타낸다.
+
+8.로그에 모든 branch를 표시하고, 그래프로 표시하고, branch명을 표기하고, 한줄로 표시할때
+git log --branches --graph --decorate (--oneline)
+
+9.branch간에 비교할 때
+git log (브랜치 이름)..(브랜치이름)
+
+10.branch간에 코드를 비교할 때
+git diff (브랜치 이름)..(브랜치이름)
+
+
+
+11.A브랜치로 B브랜치를 병합할때 ( A <- B)
+git checkout A (현재 쓰는 브랜치를 A로 바꾸고)
+git merge B
+
+
+12.branch를 merge하는 두가지 방법
+    -fast-forward
+        하나의 branch에서 나온 새로운 branch를 병합할때 이전branch의 commit이 새로운branch의 최신 commit 바로 전단계와 같다면 합병하더라도 따로 commit안하고 바로 merge됨
+    -recursive strategy
+        새로만든 branch에서 진행된 여러 commit과 원래 branch의 진행된 여러 commit을 병할할때 각각의 commit이 가르키는 전단계의 commit이 다르면 두 branch의 공통의 commit 을 찾고 3-way merge방법을 이용해서 merge한다.
+        
+
+13.branch confilct
+두개의 branch를 병합할 때 하나의 파일에서 서로 같은 곳을 다르게 고친 commit이 존재하면 merge fail이 뜸
+==> Auto-merging (파일이름) 
+    CONFLICT (content) : Merge conflict in (파일이름)
+    Automatic merge falied; fix conflicts and then commit the result
+이때 git status를 하면 충돌이 일어난 파일을 찾을 수 있다.
+그 다음 충돌이 발생한 파일로 들어가서 수정을 한다.  
+'<<<<<<< HEAD' 부터 '=======' 사이의 구간이 현재 체크 아웃된 파일의 내용이고 '=======' 부터 '>>>>>>> exp' 사시의 구간이 병합하려는 대상인 exp 브랜치의 코드 내용이다.
+이 정보를 참고로해서 두개의 코드를 병합한 후에 특수기호들을 제거하면 된다.
+작업이 끝나면 파일을 저장.
+
+
+14.stash(감추다,숨기다)
+다른 브랜치로 checkout을 해야 하는데 아직 현재 브랜치에서 작업이 끝나지 않은 경우는 커밋을 하기가 애매하다
+(커밋을 안하고 다른 브랜치로 넘어가서 git status를 하면 다른브랜치에서 끝내지 않는 modified or untracked file이 넘어간 브랜치에서 뜬다)
+이런 경우 stash를 이용하면 작업중이던 파일을 임시로 저장해두고 현재 브랜치의 상태를 마지막 커밋의 상태로 초기화 할 수 있다. 
+그 후에 다른 브랜치로 이동하고 작업을 끝낸 후에 작업 중이던 브랜치로 복귀한 후에 이전에 작업하던 내용을 복원할 수 있다.
+git stash 를 하여 하던 작업을 잠시 숨겨두고 다른 브랜치로 넘어갔다가
+작업하던 브랜치로 checkout하여
+git stash apply를 하면 하던 작업이 돌아온다.
+git stash list로 stash의 목록을 볼 수 있다.
+stash는 스택처럼 쌓인다. git apply는 최신 stash로 준다.
+stash list의 스텍을 지우려면 drop하거나 apply후 지우고 싶으면 pop을 이용한다.

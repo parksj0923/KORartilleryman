@@ -1,0 +1,66 @@
+git은 버젼관리 시스템
+
+1.git 시작할 때
+git init - 현재 디렉토리에다가 작업을 진행하겠다 라는 것을 알려주는 기능
+        그럼 .git이라는 파일이 생김, 버전관리를 하면 여러가지 정보들이 생성되고 이 것들이 저장됨
+        
+git status - 현재 디렉토리에서 git이 관리하는 파일들의 상태를 보여줌
+            untracked -파일을 추적안하는 상태 - add 해줘야함
+            modified - 파일이 변경됨 - add 해줘야함
+            new file - 새로운 파일이 추가됨
+            deleted - 파일이 삭제됨
+            
+git add (file name) - git이 파일을 추적함
+                    - git add --all 하면 모든 파일 추가 및 추적
+
+2.버전 - 진행중인 작업을 완료한 상태
+버전에 포함될 버전을 만든 사람에 대한 정보를 설정
+git config --global user.name (이름)
+git config --global user.emial (이메일)
+
+ 
+3.git commit을 한다.
+그러면 vim 파일이 열리는데 git status 했을때 나오는 내용들이 주석처리돼서 나온다.정보를 알려주는것
+그 위에 현재 버전의 메세지를 적는다.
+vim 이기 때문에 i를 눌러서 -insert- 상태로 만들고 끌때는 esc하고 :wq
+이렇게 하면 현재 버전이 만들어진다.
+
+4.stage area
+정리 --- git add 후 commit
+add를 한 파일만이commit된다
+이러한 commit 대기 상태를 stage area라고 부른다.
+
+stage area - commit 대기파일들이 있는곳
+repository - commit 된 파일들이 있는 곳
+
+
+5.git log
+git 버전들이 어떻게 변경됬는지 나옴
+작성자와 날짜같은 정보들과 그런것들이 나온다.
+git log -p -  각각의 소스와 소스상의 차이점이 나옴
+    +++ 부분이 최신 버전 파일의 이름
+    --- 부분이 옛날 버전 파일의 이름
+    (/dev/null은 파일이 없는 상태)
+    + 부분이 최신버전에서 변경된 부분
+    - 부분이 옛날버전에서 부분
+commit log했을 때 뜨는
+commit e4663454...는 commit의 id번호(고유한 주소)
+이때 commit diff (commit주소)..(commit 주소) 를 하면 차이점을 알 수 있다. 
+
+6.commit과거로 돌아가기-reset VS revert
+
+git reset (commit 주소) --hard : 주소친 곳까지 버전을 남김
+reset은 과거로 돌아갈때 과거 이후의 것들은 다 앲애는것
+-version 4,5를 없애고 3으로 돌아가고 싶으면 reset-->verison 123만 남음
+reset은 다른사람들과 공유할때는 사용하면 안됨, 혼자 컴퓨터에서 사용할 때만 사용
+
+git revert (commit 주소) 
+commit을 취소한 내용을 새로운 버전으로 만든다.
+
+7.commit여러 옵션들
+git commit -a(--all)
+삭제하거나 수정한 파일을 자동으로 stage에 올린다. 
+
+git commit -m(--message) (메세지)
+-뒤에 오는 message를 eidtor에 띄우지 않고 바로 작성한다. 
+

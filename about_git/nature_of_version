@@ -1,0 +1,42 @@
+git은 버젼관리 시스템
+
+git 시작할 때
+git init - 현재 디렉토리에다가 작업을 진행하겠다 라는 것을 알려주는 기능
+        그럼 .git이라는 파일이 생김, 버전관리를 하면 여러가지 정보들이 생성되고 이 것들이 저장됨
+        
+git status - 현재 디렉토리에서 git이 관리하는 파일들의 상태를 보여줌
+            untracked -파일을 추적안하는 상태 - add 해줘야함
+            modified - 파일이 변경됨 - add 해줘야함
+            new file - 새로운 파일이 추가됨
+            
+git add (file name) - git이 파일을 추적함
+                    - git add --all 하면 모든 파일 추가 및 추적
+
+버젼 - 진행중인 작업을 완료한 상태
+
+버전에 포함될 버전을 만든 사람에 대한 정보를 설정
+git config --global user.name (이름)
+git config --global user.emial (이메일)
+
+다음으로 
+git commit을 한다.
+그러면 vim 파일이 열리는데 git status 했을때 나오는 내용들이 주석처리돼서 나온다.정보를 알려주는것
+그 위에 현재 버전의 메세지를 적는다.
+vim 이기 때문에 i를 눌러서 -insert- 상태로 만들고 끌때는 esc하고 :wq
+이렇게 하면 현재 버전이 만들어진다.
+
+확인할 때는 git log를 하면
+작성자와 날짜같은 정보들과 그런것들이 나온다.
+
+stage area
+정리 --- git add 후 commit
+add를 한 파일만이commit된다
+이러한 commit 대기 상태를 stage area라고 부른다.
+
+stage area - commit 대기파일들이 있는곳
+repository - commit 된 파일들이 있는 곳
+
+
+
+
+

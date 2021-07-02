@@ -1,0 +1,16 @@
+리눅스 패키지 관리
+
+1. 조회
+rpm -qa | nl : redhat package manager약자
+             : -qa는 옵션으로 query all임
+             : | nl 은 number line으로 줄에 번호 매기기
+             
+rpm -qa | grep ftp : ftp이름으로 되어 있는 파일을 찾아라
+
+
+네트워크 테스트
+
+ping -c3 8.8.8.8
+
+
+echo $PATH 하면 command not found 일때 어디 디렉토리까지 찾는지 알 수 있다.

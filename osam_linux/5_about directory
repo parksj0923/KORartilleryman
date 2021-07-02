@@ -1,0 +1,11 @@
+-rw-rw-r--. 1 j j 0 2월 13 07:55 aa
+drwxrwxr-x. 2 j j 6 2월 13 07:55 aa
+lrwxrwxrwx. 1 root root 14 2월 13 07:55 rc.local -> rc.d/rc.local
+
+제일 앞 -, d, l : - 파일, d 디렉토리, l 심볼릭링크(소프트링크)
+rwx: 권한
+뒤에 숫자 1,2 : 하드링크 수 
+앞의 j, 뒤의 j : 소유주, 소유 그룹
+뒤에 0,6 : 사이즈
+파일수정시간
+파일명

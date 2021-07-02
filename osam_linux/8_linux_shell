@@ -1,0 +1,26 @@
+현재 내가 사용하고 있는 shell 을 볼려면
+echo $SHELL
+
+여기서 $변수를 가르키는 것으로 $SHELL은 환경변수이다
+
+env하면 환경변수 창고로 많은 환경변수들이 나온다.
+
+shell은 bash말고도 많이 존재함.
+chsh -l (change shell)을 치면 shell 종류들이 나옴
+ 
+가장 많이 사용하는 shell을 bon shell이라고 하고 sh 이댜.
+bash는 bon again shell으로 bon shell 의 클론이다.
+
+
+처음에 shell이 시작될떄 로그인을 하게된다.
+로그인을 하게 되면
+/etc/profile 을 읽는다.
+
+/etc/profile.d/*.sh 을 읽어온다.
+
+다음 내 홈디렉토리에 가서 
+~/.bash_profile 을 읽고
+~/.bashrc 를 읽고
+~/.bash_history  ==> 명령어 history 
+~/.bash_logout을 읽는다. ==> shell을 끌때 할 것들을 적어놓는곳
+(이때 앞에붙는 . 은 숨김파일이다.)

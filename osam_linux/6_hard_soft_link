@@ -1,0 +1,46 @@
+link file
+-hard link : reference변수를 생각하면됨, 파일 참조하는 것
+
+-soft link(symbolic link)  : point 변수
+
+cp a b : a와 b가 따로임
+ln a c(hard link) : a와 c가 같은 곳임(원래있는것을 다른이름으로 쓴다고 생각)
+ln -s a d(soft link) : d는 a를 가르키고 있음 (윈도우로 생각하면 바로가기 아이콘)
+
+여기서 root앞의 번호는 hardlink수이다.
+
+(Hard link)
+
+ll -i 했을때  (-i는 inode를 보여달라는뜻)
+(컴퓨터는 자료들을 번호를 매겨서 관리하는데, 이때 파일의 번호를 붙이면 inode임)
+4698855 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c1
+4698856 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c2
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+
+이떄 cp c1 c4  하면
+4698855 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c1
+4698856 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c2
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+4698857 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c4
+가 된다
+
+그리고 ln c1 l1 하면
+4698855 -rwxrwxr-x. 2 root root 8840 2월 24 14:45 c1
+4698856 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c2
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+4698857 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c4
+4698855 -rwxrwxr-x. 2 root root 8840 2월 24 14:45 l1
+이렇게 같은파일이 이름이 다르게 나온다. 
+
+(Soft link)
+4698855 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c1
+4698856 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c2
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+
+여기서 ln -s c1 sl1 이렇게 치면 (ln -s 는 soft link한다는말)
+4698855 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c1
+4698856 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c2
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+4698854 -rwxrwxr-x. 1 root root 8840 2월 24 14:45 c3
+3932183 lrwxrwxrwx. 1 root root    1 2월 24 13:23 sl1
+이렇게 바로가기처럼 만들어진다.

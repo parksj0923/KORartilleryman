@@ -1,0 +1,6 @@
+Devstack
+-복잡한 오픈스택 시스템을 자동으로 설치하여 어떻게 동작하는지 알기 위한 프로젝트
+-오픈스택을 처음 접하는 유저에게 추천
+-오픈스택의 프로젝트의 ALL-in-One 설치를 제공하며, 어떤 구성요소들이 있는지 확인할 수 있음
+
+Github https://github.com/parksj0923/KORartilleryman-DevStack에 DevStack실습용 저장소 만들어놓았음 참고

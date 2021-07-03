@@ -65,3 +65,6 @@ git commit -a(--all)
 git commit -m(--message) (메세지)
 -뒤에 오는 message를 eidtor에 띄우지 않고 바로 작성한다. 
 
+git commit --amend 
+커밋 메서지를 수정할 수 있다. push전에 해야됨
+

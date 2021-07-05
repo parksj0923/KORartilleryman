@@ -1,0 +1,36 @@
+군대에서 파이썬 코딩대회 준비
+
+1. for _ in range(5)
+    print("hi")
+  => hi 5번 출력 : _는 의미없는 변수를 할때사용
+  
+2. iteratble 객체 
+    반복가능한 객체 ; for문 사용이 가능한 객체
+    대표적으로 iterable한 타입 - list, dict, set, str, bytes, tuple, range
+    
+   iterator  객체
+    값을 하나씩 꺼낼 수 있는 객체
+    
+3. 파이썬 zip 함수
+    두 데이터를 서로 엮어 주는 함수 
+    여러개의 iterable한 객체를 쌍으로 만들어줌
+    
+    
+4. 파이썬 한줄로 for문 만들기
+    [i for i in v]
+    
+5.class관련
+    -아무것도 안 넣고 class 선언할 때 pass넣으면 에러 안뜸
+    -#self의 의미 : self는 인스턴스를 가르킬때 사용된다.self를 사용안하면 메소드가 클래스 자체의 메소드가 되어버린다.즉 self를 쓰면 네임스페이스가 생긴다.
+    
+6.이차원 행렬 a의원소 하나씩 들어가기
+    for i in a:
+        for j in i:
+            etc
+            
+7.정원에 꽃피우기 문제
+    2차원 좌표에서 동서남북 좌표에 접근할때, dx=(1,0,-1,0), dy=(0,-1,0,1) 이거를 
+    for i in range(4):
+        x = x[0]+dx[i]
+        y = y[1]+dy[i]
+    하고, out of range -1이하 와 매트릭스 범위 이상 이것만 처리해주면 됨

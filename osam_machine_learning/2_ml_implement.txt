@@ -1,0 +1,206 @@
+Google Colab을 이용하여 개발함
+-tensorflow개발환경이 자동으로 구축되어 있음
+-한줄한줄 코드를 실행해 가면서 개발가능-shift+enter
+
+1.Supervised Learning
+1-1 Linear Regression
+    -종속변수 y와 한개 이상의 독립변수 x와의 선형 상관 관계를 모델링하는 회구 분석 기법
+    -회귀분석:관찰된 연속형 변수들에 대해 두 변수 사이의 모형을 구한뒤 적합도를 측정
+
+-tesorflow keras를 colab을 통해서 해봄
+-이 과정은 tensorflow의 회귀부분, 자동차 연비예측하기 과정이다.
+
+-시작설정
+import pathlib
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+print(tf.__version__)
+
+-데이터 셋 : dataset_path = keras.utils.get_file("auto-mpg.data", "http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data")
+dataset_path
+
+-다음 pandas를 통해서 데이터를 가져오기
+column_names = ['MPG','Cylinders','Displacement','Horsepower','Weight',
+                'Acceleration', 'Model Year', 'Origin']
+raw_dataset = pd.read_csv(dataset_path, names=column_names,
+                      na_values = "?", comment='\t',
+                      sep=" ", skipinitialspace=True)
+
+dataset = raw_dataset.copy()
+dataset.tail() 여기서 tail은 맨 마지막 데이터 5개 정도를 가지고옴
+
+-데이터셋들은 일부 데이터가 누락되어 있을 수도 있음
+dataset.isna().sum()을 통해서 누락된 데이터 갯수 확인
+
+-데이터를 모으다보면 데이터들이 누락된 결측값(missing values)가 존재하는데 이런 값들은 pandas에서 NaN, 으로 표시하고, none을 읽을 수 도 있다.
+이때 isna(), isnull()등으로 확인해야함
+
+-이것을 dataset = dataset.dropna()를 통해서 누락된 행을 없애줘야함
+
+-필요없는 데이터 열은 없애준다.
+-열이름 : dataset.pop('열이름')
+
+-데이터셋을 훈련셋와 테스트 셋으로 분할해야됨
+-train_dataset = dataset.sample(frac=0.8,random_state=0)
+ test_dataset = dataset.drop(train_dataset.index)
+ 
+-다음, 데이터들 간의 데이터 값에 대한 범위들이 다 다르고 편차도 달라서 정규화를 해줘야함
+-ex>Cylinders라는 데이터는 범위가 0-10인데, weight라는 데이터는 범위가 0-400
+-특성을 정규화하지 않아도 모델이 수렴할 수 있지만, 훈련시키기 어렵고 입력 단위에 의존적인 모델이 만들어진다.
+
+-정규화를 할려면 평균과 표준편차가 필요하다.이때 아래 describe함수를 쓰면 간단하게 화면으로 볼 수 있음
+-train_stats = train_dataset.describe()
+train_stats.pop("MPG")
+train_stats = train_stats.transpose()
+train_stats
+(mpg는 맞춰야하는 값이기 때문에 정규화를 안해줌)
+train_labels = train_dataset.pop('MPG')
+test_labels = test_dataset.pop('MPG')
+(mpg는 y값으로 따로 저장해줌)
+
+
+- 앞선 과정으로 x데이터들을 다 구했음
+-다음으로 모델을 만들어야 하는데, linear하다는 것은 y = X*W+B
+-이떄 W를 학습시켜 만든다고 생각하면됨
+
+-모델을 만드는 것은 
+def build_model():
+  model = keras.Sequential([
+    layers.Dense(64, activation='relu', input_shape=[len(train_dataset.keys())]),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(1)
+  ])
+
+  optimizer = tf.keras.optimizers.RMSprop(0.001)
+
+  model.compile(loss='mse',
+                optimizer=optimizer,
+                metrics=['mae', 'mse'])
+  return model
+
+여기서 loss는 label <===> y=x*w+b의 차이로 얘를 줄이면서 학습을 한다.
+optimizer : 오차가 났을때 w와 b를 어떤 방법으로 변경해 나갈 것인가
+-모델이 어떻게 만들어 졌는데 확인할 수 있음
+model.summary()
+-조금더 디테일하게 모델이 어떻게 만들어졌는지 사진으로 확인가능
+keras.utils.plot_model(model, "model_picture.png", show_shapes=True)
+
+-훈련모델을 분할해서 학습시키고 예측하기
+example_batch = normed_train_data[:10]
+example_result = model.predict(example_batch)
+example_result
+
+-이 작업을 1000번 반복하면서 학습을 시킨다.
+-여기서 fit은 학습을 시킨다는것
+-훈련 정확도와 검증 정확도는 history객체에 저장된다.
+
+# 에포크가 끝날 때마다 점(.)을 출력해 훈련 진행 과정을 표시합니다
+class PrintDot(keras.callbacks.Callback):
+  def on_epoch_end(self, epoch, logs):
+    if epoch % 100 == 0: print('')
+    print('.', end='')
+
+EPOCHS = 1000
+
+history = model.fit(
+  normed_train_data, train_labels,
+  epochs=EPOCHS, validation_split = 0.2, verbose=0,
+  callbacks=[PrintDot()])
+
+학습시킬때 fit에 들어가야 되는 내용
+x데이터, y데이터, 에폭수, 검증데이터셋
+(에폭은 훈련데이터 전체 갯수(ex-385개)를 한번 다 돌았을때 1에폭이라고 한다)
+
+-history 객체에 저장된 통계치를 사용해 모델의 훈련 과정을 시각화해 보면
+hist = pd.DataFrame(history.history)
+hist['epoch'] = history.epoch
+hist.tail()
+
+
+여기서 그래프를 그려서 확인해 본다면
+import matplotlib.pyplot as plt
+
+def plot_history(history):
+  hist = pd.DataFrame(history.history)
+  hist['epoch'] = history.epoch
+
+  plt.figure(figsize=(8,12))
+
+  plt.subplot(2,1,1)
+  plt.xlabel('Epoch')
+  plt.ylabel('Mean Abs Error [MPG]')
+  plt.plot(hist['epoch'], hist['mae'],
+           label='Train Error')
+  plt.plot(hist['epoch'], hist['val_mae'],
+           label = 'Val Error')
+  plt.ylim([0,5])
+  plt.legend()
+
+  plt.subplot(2,1,2)
+  plt.xlabel('Epoch')
+  plt.ylabel('Mean Square Error [$MPG^2$]')
+  plt.plot(hist['epoch'], hist['mse'],
+           label='Train Error')
+  plt.plot(hist['epoch'], hist['val_mse'],
+           label = 'Val Error')
+  plt.ylim([0,20])
+  plt.legend()
+  plt.show()
+
+plot_history(history)
+
+-그래프를 보면 수 백번 에포크를 진행한 이후에는 모델이 거의 향상되지 않는다.
+-model.fit 메서드를 수정하여 검증 점수가 향상되지 않으면 자동으로 훈련을 멈추도록 만든다
+-에포크마다 훈련 상태를 점검하기 위해 EarlyStopping 콜백(callback)을 사용
+-지정된 에포크 횟수 동안 성능 향상이 없으면 자동으로 훈련이 멈춤
+
+model = build_model()
+
+# patience 매개변수는 성능 향상을 체크할 에포크 횟수입니다
+early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+
+history = model.fit(normed_train_data, train_labels, epochs=EPOCHS,
+                    validation_split = 0.2, verbose=0, callbacks=[early_stop, PrintDot()])
+
+plot_history(history)
+(여기서 patience =10은 val_loss가 10번동안 안줄어들면 그만한다는것)
+
+
+-이것을 이용하여 테스트 세트에서 모델의 성능을 확인
+-이를 통해 모델이 실전에 투입되었을 때 모델의 성능을 짐작할 수 있음
+loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=2)
+
+print("테스트 세트의 평균 절대 오차: {:5.2f} MPG".format(mae))
+
+마지막으로 테스트 세트에 있는 샘플을 사용해 MPG 값을 예측
+test_predictions = model.predict(normed_test_data).flatten()
+
+plt.scatter(test_labels, test_predictions)
+plt.xlabel('True Values [MPG]')
+plt.ylabel('Predictions [MPG]')
+plt.axis('equal')
+plt.axis('square')
+plt.xlim([0,plt.xlim()[1]])
+plt.ylim([0,plt.ylim()[1]])
+_ = plt.plot([-100, 100], [-100, 100])
+
+
+
+
+결론 :
+-평균 제곱 오차(MSE)는 회귀 문제에서 자주 사용하는 손실 함수(분류 문제에서 사용하는 손실 함수와 다름).
+
+-비슷하게 회귀에서 사용되는 평가 지표도 분류와 다름. 많이 사용하는 회귀 지표는 평균 절댓값 오차(MAE)
+
+-수치 입력 데이터의 특성이 여러 가지 범위를 가질 때 동일한 범위가 되도록 각 특성의 스케일을 독립적으로 조정해야 함
+
+-훈련 데이터가 많지 않다면 과대적합을 피하기 위해 은닉층의 개수가 적은 소규모 네트워크를 선택하는 방법이 좋음
+
+-조기 종료(Early stopping)은 과대적합을 방지하기 위한 좋은 방법

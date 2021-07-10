@@ -1,0 +1,23 @@
+machine learning :
+컴퓨터가 학습할 수 있도록 하는 알고리즘과 기술을 개발하는 분야
+
+
+Supervised/Unsupervised Learning
+Supervised : 데이터셋을 사람이 만들어주고 학습시켜야됨
+UnSupervised : 데이터만 주고 기계가 알아서 분류하고 학습해라 ex>Clustering
+
+
+Training set/ Test set
+training set : 훈련시킬때 사용하는 데이터셋
+test set: 모델을 검증하기 위해서 사용하는 데이터 셋
+
+Underfiting, balanced, Overfiting
+Under : test set의 데이터를 잘 분류하지 못한다. 
+Overfiting : 훈련시킨 데이터셋에 대해서 과도하게 맞춰져있음, 일반화가 안될 수 있음
+
+Original labeled data 크게 세가지로 나뉨
+    -Training set
+    -Validation set-데이터 셋에대한 최적화를 위해서 넣는 데이터셋, test set전에 하면서 확인
+    -Test set -최종적으로 사용함
+    보통은 8:1:1로 넣음
+    

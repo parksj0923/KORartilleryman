@@ -37,3 +37,5 @@
         x = x[0]+dx[i]
         y = y[1]+dy[i]
     하고, out of range -1이하 와 매트릭스 범위 이상 이것만 처리해주면 됨
+    
+8. testtsetsetstsetsetsetset

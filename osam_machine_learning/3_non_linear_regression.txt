@@ -1,0 +1,17 @@
+Non-Linear Regression
+
+Activation Functions
+    y = WX + b ------> y = ReLU(WX+b)
+
+Activation Functions
+-Sigmoid, Leaky ReLU, tanh, ReLU, ELU
+-Sigmoid나 tanh애들은 딥러닝에서 히든 layer가 깊어질수록 학습이 안됨
+-이유 : gradient vanishing, sigmoid나 tanh는 끝에 1로 수렴하기 때문에
+-gradient가 점점 작아져 weight가 변화가 거의 없어짐
+-이를 고안하고자 ReLU가 나옴
+
+활성화 함수의 장점
+-활성화 함수를 사용하면 더 학습효과가 좋고 결과가 잘나옴
+-현재 뉴런의 input을 feeding하여 생성된 output이 다음 레이어로 전해지는 과정중 역할을 수행하는 수학적인 게이트(gate)
+-뉴런의 input이 모델의 예측과 관련이 있는지 없는지를 근거로 이것을 활성화할지 활성화하지 않을지를 결정한다.
+-각 뉴런의 output을 0과1 또는 1과 -1 사이로 normalization하여 모델이 복잡한 데이터를 학습하는데 도움을 줍니다.

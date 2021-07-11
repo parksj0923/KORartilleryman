@@ -1,0 +1,169 @@
+이전 강의
+-x와 y의 관계를 표현하는 모델을 만들때, linear하게 적합도를 측정
+
+연속된 값이 아닌 범주형 데이터 값들을 예측할때 범위를 구분하여 분류
+
+tensorflow 튜토리얼 기초적인 이미지 분류 참고
+
+패션 MNIST 데이터셋을 통하여 분류
+
+-패션 MNIST import
+fashion_mnist = keras.datasets.fashion_mnist
+
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+-클래스 이름 정의
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+               
+-모델을 훈련하기 전에 데이터 셋 구조를 살펴보면
+train_images.shape   => (60000,28,28) 6만개의 이미지, 28*28픽셀
+
+-비슷하게 훈련세트에는 6만개의 레이블이 있다
+len(train_labels)   => 60000
+
+-각 레이블은 0과 9사이의 정수
+train_labels    =>  array([9, 0, 0, ..., 3, 0, 5], dtype=uint8)
+
+
+네트워크를 훈련하기 전에 데이터를 전처리를 해야함
+-먼저 데이터인 첫번째 이미지를 보면  0-255사이 값
+plt.figure()
+plt.imshow(train_images[0])
+plt.colorbar()
+plt.grid(False)
+plt.show()
+
+이떄 신경망 모델에 주입하기 전에 범위를 0-1로 조정하는 정규화를 시킴
+train_images = train_images / 255.0
+
+test_images = test_images / 255.0
+
+훈련세트에서 처음 25개 이미지와 아래 클래스 이름을 출력, 데이터 포멧이 올바른지 확인하고 네트워크 구성과 훈련할 준비 마침
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(5,5,i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+
+
+모델구성
+-신경망 모델을 만들려면 모델의 층을 구성한 다음 모델을 컴파일 한다
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
+
+-첫번째 층인 tf.keras.layers.Flatten은 2차원 배열(28*28 픽셀)의 이미지 포맷을 28*28 = 784 픽셀의 1차원 배열로 변환
+-이 층은 이미지에 있는 픽셀의 행을 펼처서 일렬로 늘린다. 
+-이 층은 학습되는 가중치가 없고 데이터를 변환하기만 한다.
+
+-다음층들은 두개의 tf.keras.layers.Dense층이 연속되어 연결된다.
+-이 층은 완전 연결(fully-connected)층이라고 부른다.
+-첫 번째 dense층은 128개의 노드를 가진다. 
+-두번째 층은 10개의 노드의 softmax층이다. 
+-이층은 10개의 확률을 반환하고 반환된 값의 전체 합은 1이다. 각 노드는 현재 이미지가 10개 클래스 중 하나에 속할 확률을 출력한다.
+
+모델 컴파일
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+              
+-모델을 훈련하기 전에 필요한 몇가지 설정이 모델 컴파일 단계에서 추가된다.
+-손실함수(loss function)-훈련하는 동안 모델의 오차를 측정, 모델의 학습이 올바른 방향으로 향하도록 이 함수를 최소화 해야함
+-옵티마이져(Optimizer)-데이터와 손실 함수를 바탕으로 모델의 업데이트 방법을 결정
+-지표(Metrics)-훈련단계와 테스트 단계를 모니터링하기 위해 사용
+
+모델 훈련
+model.fit(train_images, train_labels, epochs=5)
+
+-신경망 모델을 훈련하는 단계는 다음과 같다
+-1.훈련 데이터를 모델에 주입 -> 여기에서는 train_images와 train_labels 배열
+-2.모델이 이미지와 레이블을 매핑하는 방법을 배움
+-3.테스트 세트에 대한 모델의 예측을 만듬 -> 여기에서는 test_images 배열, 이 예측이 test_labels 배열의 레이블과 맞는지 확인
+
+정확도 평가
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print('\n테스트 정확도:', test_acc)
+
+-테스트 세트에서 모델의 성능을 비교
+
+예측 만들기
+-훈련된 모델을 사용하여 이미지에 대한 예측을 만들 수 있음
+predictions = model.predict(test_images)
+
+-예측 확인시
+predictions[0]
+-하면
+[19]
+predictions[0]
+array([8.24587801e-07, 1.06758094e-07, 3.22273650e-07, 2.77359646e-08,
+       2.16989875e-08, 1.01088891e-02, 2.11233646e-06, 3.19986157e-02,
+       3.64561041e-04, 9.57524538e-01], dtype=float32)
+이런식으로 나온다. 
+-이 예측은 10개의 숫자 배열로 나타난다. 
+-이 값은 10개의 옷 품목에 상응하는 모델의 신뢰도를 나타낸다.
+-가장 높은 신뢰도를 가진 레이블을 찾으면
+np.argmax(predictions[0])
+
+-맞는지 확인하면
+test_labels[0]
+
+-10개의 클래스에 대한 예측을 모두 그래프로 표현
+
+
+i = 0
+plt.figure(figsize=(6,3))
+plt.subplot(1,2,1)
+plot_image(i, predictions, test_labels, test_images)
+plt.subplot(1,2,2)
+plot_value_array(i, predictions,  test_labels)
+plt.show()
+
+
+-몇개의 이미지 예측을 출력해보는 코드
+-올바르게 예측된 레이블은 파란색이고, 잘못 예측된 레이블은 빨강색이다. 
+-숫자는 예측 레이블의 신뢰도 퍼센트(100만점)이다. 
+-신뢰도가 높을 때도 잘못 예측할 수 있다.
+# 처음 X 개의 테스트 이미지와 예측 레이블, 진짜 레이블을 출력합니다
+# 올바른 예측은 파랑색으로 잘못된 예측은 빨강색으로 나타냅니다
+num_rows = 5
+num_cols = 3
+num_images = num_rows*num_cols
+plt.figure(figsize=(2*2*num_cols, 2*num_rows))
+for i in range(num_images):
+  plt.subplot(num_rows, 2*num_cols, 2*i+1)
+  plot_image(i, predictions, test_labels, test_images)
+  plt.subplot(num_rows, 2*num_cols, 2*i+2)
+  plot_value_array(i, predictions, test_labels)
+plt.show()
+
+
+
+훈련된 모델을 사용하여 한 이미지에 대한 예측을 만들어보자
+# 테스트 세트에서 이미지 하나를 선택합니다
+img = test_images[0]
+
+print(img.shape)
+
+-tf.keras 모델은 한번에 샘플의 묶음 또는 배치로 예측을 만드는데 최적화 되어있음
+-하나의 이미지를 사용할 때도 2차원 배열로 만들어야함
+# 이미지 하나만 사용할 때도 배치에 추가합니다
+img = (np.expand_dims(img,0))
+
+print(img.shape)
+
+이제 이미지 예측을 만듬
+predictions_single = model.predict(img)
+
+print(predictions_single)
+
+
+plot_value_array(0, predictions_single, test_labels)
+_ = plt.xticks(range(10), class_names, rotation=45)

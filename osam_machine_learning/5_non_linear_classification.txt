@@ -1,0 +1,4 @@
+non-linear-classification
+
+앞선 강의에서 했던것에서
+activation layer로 ReLU를 추가

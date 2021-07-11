@@ -1,0 +1,20 @@
+Unsupervised learning
+
+복습
+-supervised learning : input data x,y , x와y의 관계가 머신이 스스로 학습하는것
+
+  WX+b = y ------(loss[cost])-------y
+  여기서 loss function으로는 MSE(mean sqaured error)-로스값 제곱들을 평균낸것
+ 
+ 
+Unsupervised learning :
+y값이 주어지지 않음, input데이터만 줌
+ex> auto encoder
+ WX+b = y ------(loss[cost])-------X
+ 
+ auto encoder는 처음 이미지를 여러 층에 걸쳐서 2차원으로 축소한다.
+ 여기서 2차원은 latent vector로 압축되었다고 생각하면됨
+ 이 latent vector를 다시 층을 거치면서 이미지로 변환시켜서 원래의 이미지와 비교
+ 
+ 
+Auto encoder를 keras를 이용하여 실습

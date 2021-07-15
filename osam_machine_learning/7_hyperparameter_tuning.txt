@@ -1,0 +1,21 @@
+hyperparameter tuning
+
+하이퍼 파라미터 : 모델을 학습하는데 구성하는 기본적인 변수들
+
+1.Learning Rate
+
+Supervised learning에서
+WX + b = y   <==============> y 
+                   loss(cost)
+여기서 예측값과 실제값의 차이인 cost을 줄이는 과정이 머신러닝 과정이고
+
+여기서 학습하는 과정에 cost를 줄이는 속도를 조절할 수 있는데 이것이 learning rate이다
+learning rate 가 크다는 것은 미분의 방향(cost가 줄어드는 방향으로)으로 많이 이동
+
+learning rate가 너무 작으면 굉장히 오랜동안 학습을 시켜야하는 단점
+반대로 너무 크면 cost가 최소가 되는 곳에 가는것이 아닌 왔다 갔다 하면서 발산해버릴 수 있다. 
+
+-Learning Rate Scheduling
+ 학습 속도에 따라서 rate를 변하게 하는 것
+ -케라스에서는 learning rate scheduling을 위해서 굉장히 좋은 콜백함수를 가지고 있다
+  (콜백함수는 예전에 early stopping에서 사용했었음->validation accuracy가 더이상 증가하지 않거나 validation loss가 줄어들지 않을때 학습을 멈추게 하는것 )

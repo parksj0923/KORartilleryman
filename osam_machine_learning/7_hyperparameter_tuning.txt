@@ -19,3 +19,63 @@ learning rate가 너무 작으면 굉장히 오랜동안 학습을 시켜야하�
  학습 속도에 따라서 rate를 변하게 하는 것
  -케라스에서는 learning rate scheduling을 위해서 굉장히 좋은 콜백함수를 가지고 있다
   (콜백함수는 예전에 early stopping에서 사용했었음->validation accuracy가 더이상 증가하지 않거나 validation loss가 줄어들지 않을때 학습을 멈추게 하는것 )
+ def scheduler(epoch):
+     if epoch < 10:
+         return 0.001
+     else:
+         return 0.001 * tf.math.exp(0.1*(10 - epoch))
+ 
+ callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+ model.fit(data, labels, epochs=100, callbacks=[callback], validation_data =(val_data, val_labels))
+ 
+ 
+ -Epoch
+  전체 데이터 셋에 대해 한 번의 학습 과정이 완료 
+  -신경망에서 사용되는 역전파 알고리즘 : 파라미터를 사용하여 입력부터 출력까지의 각 계층의 weight를 계산하는 과정을 순방향 패스(forward pass), 반대로 거슬러 올라가면서 다시 한번 계산과정을 거처 기존의 weight를 수정하는 역방향 패스(backword pass)
+  -이 전체 데이터 셋에 해당하는 과정(forword+backword)이 완료되면 한번의 epoch
+  
+  모델을 만들때 적절한 epoch 값을 설정해야만 under, overfiting을 방지
+  epoch이 너무 작으면 underfiting, 너무 크면 overfiting이 발생할 확률이 높음
+  
+  
+ -Batch Size
+  한번에 학습시키는 수
+  전체 데이터를 쪼개서 학습시킴
+  ex)
+   model.fit은 기본 batch size를 argument로 받지 않았었는데 default값으로 32로 한다
+   -전체 데이터를 32등분으로 나눈다는 것
+  
+  batch_size를 너무 크게하면 예측값과 실제값의 차이를 이용한 MSE(최소제곱법-제곱 평균이 최소가 되게 한다.)에서 평균값이 너무 작아져서 최소값을 못찾는 경우가 발생-learning rate를 너무 작게 한것과 비슷한 건가?
+  반대도 마찬가지
+   
+ -Iteration
+  epoch을 나누어서 실행하는 횟수
+  
+ 메모리의 한계와 속도 저하 때문에 대부분의 경우 한번의 epoch에서 모든 데이터를 한꺼번에 집어넣을 수는 없다.
+ 그래서 데이터를 나누어서 주게 되는데 이때 몇 번 나누어서 주는가를 iteration, 각 iteration마다 주는 데이터 사이즈를 batch size라고 한다. 
+ 
+(example)
+전체 2,000개의 데이터, epochs =20, batch_size = 500
+=> 1 epoch은 4번의 iteration
+    전체 20 번의 학습이 이루어졌고, iteration 기준으로는 80번의 학습이 이루어짐
+
+
+ -Finding Optimal Hyperparameters
+  하이퍼파라미터의 최적값을 찾는 방법
+  -Gird Search
+  각각의 변수를 이용한 테이블을 만들어서 하나하나 확인(실험)하면서 최적의 값을 찾는 방법
+  -단점 : gird search에서는 테이블을 만들때 변수들의 값들을 임의로 정해줘야 하는데 정작 최솟값은 놓치는 경우가 발생할 수 있음(연속적이지 않기 때문에)
+  
+  -Random Search
+   일정한 간격으로 변수 테이블을 만드는것이 아닌 random으로 찾고 나온 최적값 주의에서 다시 찾고 이런방식으로 찾음
+   
+  -AutoML
+   최적의 파라미터 값을 자동으로 찾아줌
+   -katib, AutoKeras등이 있음
+  
+
+
+ 
+   
+   
+ 

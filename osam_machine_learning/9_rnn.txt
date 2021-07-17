@@ -1,0 +1,133 @@
+RNN(Recurrent Neural Network)
+시계열적인 데이터가 있을때 알고 싶다. (전후 데이터들이 관련이 있을때 )
+하지만 fully connected layer로 한다면 데이터를 한번에 넣기 때문에 잘안됨
+
+단어, 텍스트나, 동영상분석에서 사용
+
+RNN에서 가장 간단한 구조 Vanilla RNN을 통해 공부
+    
+    rnn에서 기초적인 단위 셀(cell)에서의 operation
+    h(t) = tanh(Wx(t) + Uh(t-1) +b)
+    (tanh는 activation function, linear function에 non-linear를 가하는 것, 모델을 복잡하게 만드는 것 -1~1사이 출력)
+    문제는 tanh는 rnn깊이가 깊어질수록 역전파할때 gradient vanishing 이 일어난다
+    
+이 문제를 극복하기 위해서 LSTM이 나옴
+LSTM : Long term short term memory
+가장 큰 차이접은 Xt가 tanh를 거치지 않고 다음 셀로 넘어갈 수 있는 길이 있음
+이 말은 깊이가 깊어도 다음셀에 영향을 줄 수 있다 
+길이가 긴 텍스트들을 예측할떄 많이 사용됨
+
+
+Keras로 실습
+!pip install -q tfds-nightly
+import tensorflow_datasets as tfds
+import tensorflow as tf
+
+-matplotlib을 가져오고 그래프를 플롯하는 helper 함수를 만듬
+import matplotlib.pyplot as plt
+
+def plot_graphs(history, metric):
+  plt.plot(history.history[metric])
+  plt.plot(history.history['val_'+metric], '')
+  plt.xlabel("Epochs")
+  plt.ylabel(metric)
+  plt.legend([metric, 'val_'+metric])
+  plt.show()
+  
+  
+-입력 파이프라인 설정하기
+IMDB 대형 영화 리뷰 데이터세트는 binary classification 데이터세트이다. 모든 리뷰에는 positive 또는 negative 감정이 있다.
+TFDS를 사용하여 데이터세트를 다운로드한다.
+
+dataset, info = tfds.load('imdb_reviews/subwords8k', with_info=True,
+                          as_supervised=True)
+train_dataset, test_dataset = dataset['train'], dataset['test']
+
+-데이터세트 info에는 인코더( tfds.features.text.SubwordTextEncoder)가 포함된다
+ 이 텍스트 인코더는 문자열을 가역적으로 인코딩하여 필요한 경우 바이트 인코딩으로 돌아간다.
+ 
+sample_string = 'Hello TensorFlow.'
+
+encoded_string = encoder.encode(sample_string)
+print('Encoded string is {}'.format(encoded_string))
+
+original_string = encoder.decode(encoded_string)
+print('The original string: "{}"'.format(original_string))
+
+assert original_string == sample_string
+
+-훈련을 위한 데이터 준비하기
+ 다음으로 이러한 인코딩된 문자열을 일괄적으로 생성한다. padded_batch 메서드를 사용하여 배치에서 가장 긴 문자열의 길이로 시퀀스를 0으로 채운다.
+BUFFER_SIZE = 10000
+BATCH_SIZE = 64
+train_dataset = train_dataset.shuffle(BUFFER_SIZE)
+train_dataset = train_dataset.padded_batch(BATCH_SIZE)
+
+test_dataset = test_dataset.padded_batch(BATCH_SI
+
+
+-모델 만들기
+
+tf.keras.Sequential 모델을 빌드하고 embedding 레이어로 시작한다. embedding 레이어는 단어당 하나의 벡터를 저장한다. 호출되면 단어 인덱스 시퀀스를 벡터 시퀀스로 변환한다. 이들 벡터는 훈련 가능히디/(충분한 데이터에 대해) 훈련 후, 유사한 의미를 가진 단어는 종종 비슷한 벡터를 갖는다.
+
+이 인덱스 조회는 원-핫 인코딩된 벡터를 tf.keras.layers.Dense 레이어를 통해 전달하는 동등한 연산보다 훨씬 효율적이다.
+
+RNN(Recurrent Neural Network)은 요소를 반복하여 시퀀스 입력을 처리한다. RNN은 출력을 하나의 타임스텝에서 입력으로 전달한 다음, 다음 단계로 전달한다.
+
+tf.keras.layers.Bidirectional 래퍼도 RNN 레이어와 함께 사용할 수 있다. 이는 RNN 레이어를 통해 입력을 앞뒤로 전파한 다음 출력을 연결한다. 이는 RNN이 장거리 종속성을 학습하는 데 도움이 된다.
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(encoder.vocab_size, 64),
+    tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(1)
+])
+
+모델의 모든 레이어에는 단일 입력만 있고 단일 출력이 생성되므로 여기서는 Keras 순차형 모델을 선택한다. 상태 저장 RNN 레이어를 사용하려는 경우, Keras 함수 API 또는 모델 하위 클래스화를 사용하여 모델을 빌드하여 RNN 레이어 상태를 검색하고 재사용할 수 있다.
+
+model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+              optimizer=tf.keras.optimizers.Adam(1e-4),
+              metrics=['accuracy'])
+              
+-모델 훈련하기
+history = model.fit(train_dataset, epochs=10,
+                    validation_data=test_dataset, 
+                    validation_steps=30)
+                    
+test_loss, test_acc = model.evaluate(test_dataset)
+
+print('Test Loss: {}'.format(test_loss))
+print('Test Accuracy: {}'.format(test_acc))
+
+위의 모델은 시퀀스에 적용된 패딩을 마스킹하지 않습니다. 패딩된 시퀀스에 대해 훈련하고 패딩되지 않은 시퀀스를 테스트하면 왜곡될 수 있습니다. 이상적으로는 마스킹을 사용하여 이를 피할 수 있지만, 아래에서 볼 수 있듯이 출력에는 약간의 영향만 미칩니다.
+
+예측값이 >= 0.5인 경우, 양성이고 그렇지 않으면 음성입니다.
+
+def pad_to_size(vec, size):
+  zeros = [0] * (size - len(vec))
+  vec.extend(zeros)
+  return vec
+  
+def sample_predict(sample_pred_text, pad):
+  encoded_sample_pred_text = encoder.encode(sample_pred_text)
+
+  if pad:
+    encoded_sample_pred_text = pad_to_size(encoded_sample_pred_text, 64)
+  encoded_sample_pred_text = tf.cast(encoded_sample_pred_text, tf.float32)
+  predictions = model.predict(tf.expand_dims(encoded_sample_pred_text, 0))
+
+  return (predictions)
+  
+# predict on a sample text without padding.
+
+sample_pred_text = ('The movie was cool. The animation and the graphics '
+                    'were out of this world. I would recommend this movie.')
+predictions = sample_predict(sample_pred_text, pad=False)
+print(predictions)
+
+# predict on a sample text with padding
+
+sample_pred_text = ('The movie was cool. The animation and the graphics '
+                    'were out of this world. I would recommend this movie.')
+predictions = sample_predict(sample_pred_text, pad=True)
+print(predictions)

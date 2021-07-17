@@ -120,7 +120,7 @@ learning rate가 너무 작으면 굉장히 오랜동안 학습을 시켜야하�
      WX + b = y
      W,b는  weight
      
-     keras에서는 tf.keras.layers.Dense할때 초기값을 뭘로 줄까?
+     keras에서는 tf.keras.layers.Dense할때 초기 값을 뭘로 줄까?
      kernel_initializer = "glorot_uniform"으로 주고 있음
      glorot Unirom (Xavier Uniform)에서는 
      [-limit,limit]사이에서 값을 랜덤으로 뽑는다

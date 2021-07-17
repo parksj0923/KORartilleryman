@@ -73,6 +73,71 @@ learning rate가 너무 작으면 굉장히 오랜동안 학습을 시켜야하�
    최적의 파라미터 값을 자동으로 찾아줌
    -katib, AutoKeras등이 있음
   
+  
+  
+  
+ -Overfiting 피하기
+ high variance, low bias 라고도 불림
+ 
+ 4가지 방법
+ -Collect more data
+     데이터를 많이 모아서 특정적으로 경향화되는 것을 막는다
+     
+ -Early stopping
+     overfiting이 되기전에 일정 수준 accuracy or loss가 되면 멈춘다. 
+     early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience = 10)
+     model.fit(train_data,train_labels, epochs=EPOCHS, validation_split = 0.2, callbacks = [early_stop])
+     
+     
+ -Regularization
+     일부 parameter를 작은 값으로 만들어 함수가 심플해지도록 하는 것
+     cost에 추가적인 loss를 더하는것
+     L1, L2 regulation존재
+     L1의 경우 cost += 람다*sum|Wj|
+     L2의 경우 cost += 람다*sum W^2
+     의미는 weight가 행렬값에 대해 너무 커지지 않기를 원하는 것
+     너무 크거나 불필요한것은 0으로 만들어 버리는 것(cost는 최소값을 찾기 때문에 w가 커지는 놈이 0으로 가버린다.)
+     tf.keras.layers.Dens(3,kernel_regularizer ='l1')
+     
+ -Dropouts
+     학습시킬때 에폭이 끝날 때마다 랜덤으로 몇개의 뉴런을 없앤다.=>심플한 모델이 된다.
+     테스트 할때는 없어지는거 없이 모든 뉴런으로 한다.
+     =>마치 여러가지 심플한 모델의 조합(앙상블)으로 표현이 됨
+     h = layers.Dense(64, activation = 'relu')(inputs)
+     h = layers.Dense(32)(h)
+                     |
+                     V
+    h = layers.Dense(64, activation = 'relu')(inputs)
+    h = layers.Dropout(0.3)(h)
+    h = layers.Dense(32)(h)
+     
+     
+     
+     
+     
+ -Weight initialization
+     weight = trainable parameters
+     WX + b = y
+     W,b는  weight
+     
+     keras에서는 tf.keras.layers.Dense할때 초기값을 뭘로 줄까?
+     kernel_initializer = "glorot_uniform"으로 주고 있음
+     glorot Unirom (Xavier Uniform)에서는 
+     [-limit,limit]사이에서 값을 랜덤으로 뽑는다
+     여기서 limit = sqrt(6/(in+out)) in, out dimension
+     ex)input shape이 (28,28)이고 ouput이 128이라면
+     in = 784, out = 128
+     
+     
+     -He Initialization
+         W ~ N(0,Var(W))
+         -weight를 정규분포에서 선택한다는 것
+         -var(W) = root(2/input demension)
+         -relu를 activation function으로 사용할 때 효과적임
+                 
+     
+ 
+ 
 
 
  

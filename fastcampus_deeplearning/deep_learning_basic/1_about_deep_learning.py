@@ -29,4 +29,25 @@ from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
-print(tf.__verison__)
+print(tf.__version__)
+
+#Define constants
+batch_size = 128
+epochs = 100
+num_classes = 10
+
+#Download MNIST dataset
+mnist = keras.datasets.mnist(train_images, train_labels),(test_images,test_labels) = mnist.load_data()
+
+#Normalize the input image so that each pixel value is between 0 to 1
+model = keras.Sequentail([
+    keras.layers.Flatten(imput_shape=(28,28)),
+    keras.layers.Dense(128,activation=tf.nn.relu),
+    keras.layers.Dense(num_classes,activation='softmax')
+])
+model.complie(optimizer='adam',
+             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+             metrics=['accuracy'])
+
+histoy = model.fit(train_images,train_labels, epochs=epochs, batch_size = batch_size)
+

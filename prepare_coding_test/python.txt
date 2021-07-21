@@ -67,6 +67,7 @@
         
 15.0으로 차있는 리스트에서 1로 바꾸는데 모든값이 1일때까지 루프돌리기
     while 0 in list:
+        queue.append(list.index(0))
     
 16. 리스트에서 원소가 몇번째 인덱스인지 찾기
     list.index(값)

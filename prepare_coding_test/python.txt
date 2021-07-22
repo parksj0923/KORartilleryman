@@ -11,6 +11,10 @@
    iterator  객체
     값을 하나씩 꺼낼 수 있는 객체
     
+    mutable 객체
+    변경가능한 객체 
+    <=> immutable 
+    
 3. 파이썬 zip 함수
     두 데이터를 서로 엮어 주는 함수 
     여러개의 iterable한 객체를 쌍으로 만들어줌
@@ -71,3 +75,36 @@
     
 16. 리스트에서 원소가 몇번째 인덱스인지 찾기
     list.index(값)
+    
+17. set 자료구조
+    수학에서 얘기하는 집합과 같다
+    순서가 없고, 집합안에서는 unique한 값을 가짐(중복없음)
+    mutable객체
+    -중괄호를 사용, but key가 없음
+    -선언시 s = set()
+    - 값 in set 하면 있으면 True 없으면 False
+    -add를 통해 원소추가
+    -update를 통해 여러데이터를 한번에 넣음
+    -remove()로 해당 값 제거, 없으면 에러
+    -discard()로 해당 값 제거, 없어도 에러 x
+
+18. enumerate(iterable객체)
+    반복문을 돌릴때 몇번쨰 인덱스 인지 같이 출력할때 필요
+    인덱스와 값을 튜플로 반환
+    for p in enumerate(list)
+        print(p)
+    =>
+    (0,값), (1,값), (2,값),(3,값)
+    for i,v in enumerate(list)식으로 사용도 가능
+    
+19. 람다(lamda) 
+    함수를 만들지 않고 메모리를 아끼며 바로사용할떄 유용
+    
+20. sort()함수
+    리스트를 오름차순으로 나열해준다.
+    -옵션들
+        -list.sort(reverse = True) => 내림차순으로 나열
+        -list.sort(key = 값) => 특정값을 기준으로 정렬한다.
+            여기서 람다를 잘 사용하면 유용함
+            list.sort(key = lamda x:x[2])
+    

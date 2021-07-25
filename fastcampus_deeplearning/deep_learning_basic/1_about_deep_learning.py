@@ -22,14 +22,38 @@
 # Deep Learning에서는 ReLU를 많이 사용한다. Sigmoid는 vanising gradient가 많이 발생
 
 
+
+
 #tensorflow 시작
 import tensorflow as tf
 from tensorflow import keras
 
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 print(tf.__version__)
+
+#시각화 하기 위한 helper class
+# Helper function to display digit images
+def show_sample(images, labels, sample_count=25):
+  # Create a square with can fit {sample_count} images
+  grid_count = math.ceil(math.ceil(math.sqrt(sample_count)))
+  grid_count = min(grid_count, len(images), len(labels))
+  
+  plt.figure(figsize=(2*grid_count, 2*grid_count))
+  for i in range(sample_count):
+    plt.subplot(grid_count, grid_count, i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(images[i], cmap=plt.cm.gray)
+    plt.xlabel(labels[i])
+  plt.show()
+
+
+#show the first 25 images in the training dataset.
+show_sample(train_images, ['Label : %s' %label for label in train_labels])
 
 #Define constants
 batch_size = 128
@@ -40,6 +64,10 @@ num_classes = 10
 mnist = keras.datasets.mnist(train_images, train_labels),(test_images,test_labels) = mnist.load_data()
 
 #Normalize the input image so that each pixel value is between 0 to 1
+train_images = train_images / 255.0
+test_images = test_images / 255.0
+
+#Define the model architecture
 model = keras.Sequentail([
     keras.layers.Flatten(imput_shape=(28,28)),
     keras.layers.Dense(128,activation=tf.nn.relu),
@@ -51,3 +79,6 @@ model.complie(optimizer='adam',
 
 histoy = model.fit(train_images,train_labels, epochs=epochs, batch_size = batch_size)
 
+#Evaluate the model using test dataset.
+test_loss, test_acc = model.evaluate(test_images, test_labels)
+print('Test Accuracy:', test_acc)

@@ -154,3 +154,11 @@
     -중복을 허용하지 않는다
 -순서에 의미가 없다(같은값이 뽑히면 순서가 달라도 같은경우
     => list(permutations(item,2))
+    
+30.행렬곱하기
+    import numpy as np 를 이용해서 
+    a = np.array(arr1)
+    b = np.array(arr2)
+    c = np.dot(a,b)
+    c = c.tolist() 로 한다
+    

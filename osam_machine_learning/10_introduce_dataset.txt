@@ -1,0 +1,16 @@
+모델 학습만 중요한 것이 아닌가?
+data science, machine learning이 복잡한 문제를 해결할 수 있음을 보이면서 DS, ML은 다양한 도메인에서 핵심요소중 하나로 자리를 잡았음
+
+실험용 모델을 개발하는 것은 비교적 단순할 수 있지만, service에 적용하기 위해서는 다양한 주변 요소들이 필요해지면서 system복잡도가 크게 높아짐
+
+학습도 중요하지만, 학습-배포 프로세스 관리도 중요
+
+Kaggle에서 dataset가져오기
+
+사용하고자 하는 것은 house price
+    -비정형 데이터(연식, 구조, 평식)
+import House Prices Dataset
+
+코랩을 이용해서 해야함
+colab - house price predict.ipynb에 해놨음
+폴더 만들어놈 house_price_predict

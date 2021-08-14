@@ -1,2 +1,71 @@
 MLP(Multi-Layer Perceptron)
--Fully- connected layers
+-Fully- connected layers를 여러 겹 쌓은것
+
+mnist를 참고하여 복습
+
+x_train = x_train.reshape((len(x_train),-1))
+여기서 x_train을 reshape한다
+기존의 x_train은 (60000,28,28)인데 x_train.reshape((len(x_train),-1))하면
+(60000,-1)의미는 -1은 알아서 계산해라 라는뜻이고 이는 남은 argument자리를 참고해서 계산 => 28,28을 -1하나로 표현했으니 28*28이 된다
+
+x값은 그냥 사용해도 되지만 딥러닝에서는 0-1사이의 값으로 학습시켜야 잘됨
+정규화를 시킴
+x_train = x_train.astype("float32") / 255
+
+y_train.shape을 해보면 (60000,)이 나온다.
+이떄 y값은 numeric한 값으로 5,1,2,6...등으로 나온다
+=> 이러면 classification 문제를 푸는것이 아님(결과값이 숫자로 나오면 regression)
+=> y값을 one-hot encoding을 해줘야함
+
+one-hot encoding하는것, y값이 (60000,10)이 되거를 원함
+
+y_train = keras.utils.to_categorical(y_train, 10)
+
+이제 입력값과 출력값에 대한 코드를 적었으니 가운데 은닉층에 대한 코드를 짜야함
+
+model = keras.Sequential(
+    [
+        keras.Input(shape=x_train.shape[-1]),
+        layers.Dense(256, activation = "relu"),
+        layers.Dense(128, activation = "relu"),
+        layers.Dense(10, activation = "softmax")
+    ]
+)
+
+
+model summary를 찍으면
+Model: "sequential_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense_3 (Dense)              (None, 256)               200960    
+_________________________________________________________________
+dense_4 (Dense)              (None, 128)               32896     
+_________________________________________________________________
+dense_5 (Dense)              (None, 10)                1290      
+=================================================================
+Total params: 235,146
+Trainable params: 235,146
+Non-trainable params: 0
+_________________________________________________________________
+이렇게 나온다
+Output Shape을 보면 (None, 256)이런식으로 되어있는데 여기서 None은 입력은 배치사이즈등 가변적으로 들어가기때문에 모델입장에서는 모르는 값임
+
+Param #은 파라미터 갯수로 
+dense_3에서는 784(28*28)*256+256에서 나온 값이다
+즉 matrix에서 셀에서 셀이어지는 선의 갯수 + bias갯수이다.
+
+학습을 시킬때는 
+model.compile(loss="categorical_crossentropy",optimizer= "adam", metrics = ["accuracy"])
+
+model.fit(x_train, y_train, batch_size= 32, epochs =1 , validation_split = 0.1)
+
+이렇게 하면 결과가 
+1688/1688 [==============================] - 6s 3ms/step - loss: 1.8281 - accuracy: 0.8808 - val_loss: 0.2630 - val_accuracy: 0.9383
+<tensorflow.python.keras.callbacks.History at 0x7f09d842b6d0>
+
+이렇게 나오는데 여기서 1688의 의미는 
+총 60000에서 batch 32 만큼 돌리면 60000/32 = 1875번 돌린다.
+근데 1688인 이유는 validation 으로 0.1 만큼을 빼고 학습시키기 때문에
+1875 * 0.9 = 1688이다.
+그래서 나온 결과가 ACCURACY 가 0.88이고 , 나머지 빼놓은 validation 으로 측정한 accrucry는 0.9383이다.

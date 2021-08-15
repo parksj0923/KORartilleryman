@@ -1,0 +1,5 @@
+EDA (Exploratory Data Analysis)
+탐색적 데이터 분석
+-우리가 분석할 데이터가 어떻게 생겼는지 눈으로 보겠다는 것임
+
+colab에서 house price predict에 있음

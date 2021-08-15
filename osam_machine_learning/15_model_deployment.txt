@@ -1,0 +1,34 @@
+ML model deployment
+-Deployment : 개발한 SW/ML model등을 사용자가 사용할 수 있도록 배포하는 것
+
+Deployment on backend vs edge-devices
+- backend deployment : 개발한 SW/ML model등을 사용자가 접속하는 서버에 배포하는 방식
+- Edge-device deployment : 사용자가 사용하는 기기에 배포하는 방식
+
+장단점
+
+        Backend                                Edge-device
+
+장점     -배포한 서버에서 잘 동작하는지만 검증하면 됨  | -연산을 사용자의 기기에서 하므로 서비스 운영비용 감소에
+        -테스트 및 모델 최적화가 용이함            |  도움이 됨
+        -사용자가 사용하는 개별 기기를 신경 쓸       | -사용자 기기에서 연산이 충분히 빠르다면 latency를 크게 
+        필요가 없음                             | 단축시킬 수 있음
+
+단점    -Latency가 큼                           | -사용자의 다양한 기기에서 테스트/검증이 필요함
+        -서버 운영 비용이 큼                      | -x86이 아닌 ARM기반 CPU에서 잘 동작할 수 있도록
+                                              | 별도의 모델 변환, 최적화가 필요할 수 있음
+                                              
+                                              
+이번 강의에서는 backend에 배포하는 것으로 진행함
+이때 REST(Representational State Transfer)를 이용하여 백엔드에 배포
+REST
+-클라이언트와 서버 사이의 통신 방식 중 하나
+-클라이언트, 서버로 구성되어 있으며 요청이 http protocol을 통해 관리되는 구조
+-http method(POST, GET, PUT,DELETE)를 통해 서버에 특정 operation을 요청한 후 응답을 받음
+-요청 간의 클라이언트상태(state)가 저장되지 않음(각 요청을 독립적으로 수행)
+-서버의 다양한 구성요소(보안, 로드밸런싱 등)을 클라이언트가 볼 수 없도록 계층화됨
+-모듈화, 빠르고 경량화되어 모바일 앱 개발에 보편적으로 사용됨
+
+RESTful
+-REST구조를 구현하는 웹서비스를 나타내기 위해 사용되는 용어
+-REST API를 제공하는 웹서비스를 RESTful하다 라고 표현함

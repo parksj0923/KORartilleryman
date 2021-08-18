@@ -10,4 +10,5 @@ Colab을 이용해서 EDA(탐색적 데이터 분석), 데이터 전처리를 �
     house_price_predict_EDA, House_Price_Predict_데이터 전처리.ipynb
     
 전처리된 dataset을 바탕으로 regression을 진행
-House_Price_Predict_데이터 전처리.ipynb 에 연결해서 함
+House_Price_Predict.ipynb 에 연결해서 함
+  

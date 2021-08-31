@@ -1,0 +1,18 @@
+Cross validation 
+Training / validation / test 
+
+모은 데이터 셋에 대해서 오버피팅이 났는지 안났는지 검증하기 위해서 모은 데이터 셋을 전부 training에 쓰지 않고 일부를 빼놓고 validation(test)에 사용한다
+
+test 데이터는 아직 모으지 못한 놈으로 생각하면 됨 
+
+
+이때 validation 은 전체에서 10%정도만 사용하는데 
+이때 10%만으로 검증이 될까?
+라는 의문에서 cross validation이 나옴
+
+데이터 셋이 작을때 validation accuracy를 믿을 수 있을까?
+
+데이터 셋을 각각 다른 부분으로 잘라서 
+각각을 학습시키고 각 학습시킨 정확도를 종합해서 검증
+==> k-fold cross validation 
+k개로 잘라서 k번에 거쳐서 하겠다

@@ -1,0 +1,30 @@
+navcr cloud platform에서 clova ocr사용하기
+
+네이버 클라우드 플랫폼 가입하고 general ocr사용하기
+
+도메인을 만들고 난 다음 text ocr과 demo버튼이 있는데 demo는 사진 넣었을 때 결과를 테스트 해볼 수 있음
+
+필요한건 text ocr
+
+text ocr의 경우 서비스 흐름
+
+도메인의 ocr invokeURL 확인 => api gateway의 endpoint로 연결 => 외부 연동
+
+ocr invokeURL?
+inovke => 부르다. 
+url을 부르는 함수 같음
+
+API Gateway?
+api 서버 앞단에서 모든 api서버들의 엔드 포인트를 단일화 해주는 또 다른 서버
+통합적으로 엔드포인트와 REST API를 관리할 수 있음
+모든 클라이언트는 각 서비스의 엔드포인트 대신 API Gateway로 요청을 전달
+API Gateway는 사용자가 설정한 라우팅 설정에 따라 각 엔드 포인트로 클라이언트를 대리하여 요청을 하고 응답을 받으면 다시 클라이언트에게 전달하는 프록시 역할
+
+
+클로바 ocr을 사용할려면 먼저 api gateway product를 만들어야함
+
+
+
+어쩃든 이렇게 저렇게 설명을 따라서 하다보면
+
+생성한 OCR 인식 호출 end-point는 도메인의 invokeURL이며, 이 API를 통해 이미지를 입력하고 인식값을 반환받을 수 있다.

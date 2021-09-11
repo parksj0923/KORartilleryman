@@ -1,5 +1,4 @@
 
-import flir_image_extractor
 import cv2
 import numpy as np
 import os
@@ -16,6 +15,8 @@ os.system('sudo modprobe bcm2835-v412')
 # 라즈베리 파이에서 OpenCV의 VideoCapure()을 이용하려면 써야하는 명령어
 cap = cv2.VideoCapture(0)
 #VideoCapture() 파라미터 안에 filename을 넣으면 저장된 비디오를 불러오고, 0,1 등을 넣으면 입력 디바이스 순서(한개인 경우0)에 따라 실시간 영상 촬영 frame을 받아 올 수 있다.
+#ret에는 성공이면 true, 실패면 false
+#img에는 현재 프레임(numpy형)을 가져온다
 ret, img = cap.read()
 # ret이 True이면 영상이 있다는 뜻
 
@@ -32,8 +33,7 @@ def naver_ocr_api(file_name):
     #만들기
     
     
-    
-
+#파일이 정상적으로 열였는지 를 확인 True면 정상
 while cap.isOpended():
     ret, img = cap.read() #가시광선 카메라 현재화면을 이미지로 read
     if not ret or image:
@@ -46,6 +46,7 @@ while cap.isOpended():
     # Preprocessing. OpenCV의 FaceNet에서 학습시킨대로 Param값을 넣어줌. DNN이 사용하는 형태로 이미지 변환
     # cv2.dnn.blobFromImage함수가 하는 일은 1. Mean subtraction (평균 빼기) / 2.Scaling (이미지 사이즈 바꾸기) / 3.And optionally channel swapping (옵션, 이미지 채널 바꾸기)
     # (104.0,177.0, 123.0)는 mean subtraction의 경험적 최적값. 그럼 mean subtraction이란 RGB값의 일부를 제외해서 dnn이 분석하기 쉽게 단순화해주는 것.
+    # mean substraction 데이터의 모든 feature에 대해 각각에 대해 평균만큼 차감=>모든 차원에 대해 원점이동 느낌
     # (300,300) : dnn모듈이 CNN으로 처리하기 좋은 이미지 사이즈, 모델이 300,300으로 고정
 
     facenet.setInput(blob)  # 변환해준 이미지 FaceNet의 input
@@ -78,31 +79,27 @@ while cap.isOpended():
         mask, nomask = model.predict(face_input).squeeze()  # load해놓은 모델에 predict method를 통해, 마스크 여부 확률을 반환
 
 
-        # 마스크 미착용 확률이 일정확률 이상 이거나 얼굴 영역 최고온도가 37.5도 이상인 경우
-        if nomask >= 0.75 or max_temperature >= 37.5:
+        # 마스크 미착용 확률이 일정확률 이상 인경우
+        if nomask >= 0.75:
             # 해당 인원 사진 저장
             number += 1
-            temperature = max_temperature
-            cv2.imwrite('No_Mask-High_Temp/' + str(i)+'_'+str('No_Mask%d%%_' % (nomask * 100) + str(number)) + 'Temp_' + str(max_temperature) + '.jpg', result_img)
-            IMAGE_FILE = 'No_Mask-High_Temp/' + str(i)+'_'+str('No_Mask%d%%_' % (nomask * 100) + str(number)) + 'Temp_' + str(max_temperature) + '.jpg'
+            cv2.imwrite('No_Mask/' + str(i)+'_'+str('No_Mask%d%%_' % (nomask * 100) + str(number)) + 'Temp_' + '.jpg', result_img)
+            IMAGE_FILE = 'No_Mask/' + str(i)+'_'+str('No_Mask%d%%_' % (nomask * 100) + str(number)) + 'Temp_'  + '.jpg'
             with io.open(IMAGE_FILE, 'rb') as image_file:
                 content = image_file.read()
 
-            image = vision.Image(content=content)
-            response = client.document_text_detection(image=image)
-            Final_Text = find_name_and_display(IMAGE_FILE, x1, x2, result_img)
+            #네이버 Clova OCR 사용
 
             # 전달할 메시지 내용 JSON형식으로 저장후 전달
             message_description = '이름 :' + Final_Text + '\n해당인원 온도 :' + str(temperature) + '\n마스크 미착용 확률 : ' + str('%d%%' % (nomask * 100))
             # telegram 사진 문자 보내는 코드
-            f = open(IMAGE_FILE, 'rb')
+            '''f = open(IMAGE_FILE, 'rb')
             response = bot.sendPhoto(mc, f)
-            response = bot.sendMessage(mc, message_description)
+            response = bot.sendMessage(mc, message_description)'''
     out.write(result_img)
     if cv2.waitKey(1) == ord('q'):  # q누르면 동영상 종료
         break
 
 out.release()
 cap.release()
-thermal_camera.close()
 # cv2.destroyAllWindows()

@@ -189,6 +189,7 @@ while cap.isOpended():
     ret, frame = cap.read() #가시광선 카메라 현재화면을 이미지로 read
     if not ret:
         break 
+    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE) #이거 화면 돌아가서 인식을 못하는 걸 수 도 있으니까 안되면 꼭 확인하기@@@@@@@@@@@@@@@@@@@@@@
     # OCR을 위해서 frame 복사
     img = frame.copy()
     

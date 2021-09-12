@@ -51,6 +51,8 @@ labels = []
 # loop over the image paths
 for imagePath in imagePaths:
 	# extract the class label from the filename
+    #각 경로를 나눠 리스트로 나열하기= os.path.sep
+    #-1은 뒤에서 첫번쨰임으로 파일이름, -2는 그전 디렉토리니까, with_mask, without_mask
 	label = imagePath.split(os.path.sep)[-2]
 
 	# load the input image (224x224) and preprocess it
@@ -67,7 +69,7 @@ data = np.array(data, dtype="float32")
 labels = np.array(labels)
 
 # perform one-hot encoding on the labels
-lb = LabelBinarizer()
+lb = LabelBinarizer() #라벨의 이진화
 labels = lb.fit_transform(labels)
 labels = to_categorical(labels)
 

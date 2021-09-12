@@ -187,10 +187,11 @@ while cap.isOpended():
     #2초에 한번씩 사진을 저장할려고 만들었음 안되면 없애기
     sec = count//2000
     ret, frame = cap.read() #가시광선 카메라 현재화면을 이미지로 read
-    # OCR을 위해서 frame 복사
-    img = frame.copy()
     if not ret:
         break 
+    # OCR을 위해서 frame 복사
+    img = frame.copy()
+    
     
     # detect faces in the frame and determine if they are wearing a
 	# face mask or not

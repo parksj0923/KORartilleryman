@@ -60,8 +60,9 @@ result83=result7[3])
 @app.route("/upload", methods = ["POST"])
 def upload():
     maskfile = request.get_json()
-    if maskfile['name']=="\n":
-        maskfile['name']="변우중"
+    #for test
+    '''if maskfile['name']=="\n":
+        maskfile['name']="변우중"'''
     now = datetime.datetime.now()
     current = now + datetime.timedelta(hours=9)
     image = maskfile['image']

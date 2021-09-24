@@ -7,7 +7,7 @@ import subprocess
 import kakao_MES_api
 
 facenet = cv2.dnn.readNet('face_detector/deploy.prototxt', 'face_detector/res10_300x300_ssd_iter_140000.caffemodel')
-model = load_model('model.h5')
+model = load_model('detector.model')
 
 cap = cv2.VideoCapture(0)
 
@@ -60,7 +60,7 @@ while cap.isOpened():
 			(startX, startY, endX, endY) = box
 			if no_mask > 0.6:
 				if flag == 0:
-					cv2.imwrite('find.jpg',frame)
+					#cv2.imwrite('find.jpg',frame)
 					name = subprocess.check_output("python3 naver_OCR_api.py -i find.jpg", shell = True)
 					p = subprocess.Popen(['python3','kakao_TTS_api.py','-n',name])
 					p2 = subprocess.Popen(['python3','send_message.py','-n',name, '-l','cam01','-i','find.jpg'])

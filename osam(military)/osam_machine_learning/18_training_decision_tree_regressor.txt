@@ -1,0 +1,15 @@
+decision tree 복습
+
+feature들이 여러개 있고
+그에 따라서 true or false를 예측하는 classifier를 만듬
+
+node(feature)는 어떻게 결정하냐
+ -모든 후보 feature들 중 impurity가 가장 낮은 feature를 선택
+ -impurity 측정방법은 여러가지가 있으며 gini계수가 대표적이다
+ 
+tree를 어디까지 자라게 해야할까
+ - 한 노드를 나눴을때의 지니계수와 나누지 않았을때의 지니계수를 비교해서
+ 나눴을때 나눴을때 impurity가 높아지면 그만하면됨
+
+
+5:30초 까지 봄

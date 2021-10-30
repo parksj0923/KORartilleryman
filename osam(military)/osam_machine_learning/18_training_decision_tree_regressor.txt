@@ -12,4 +12,19 @@ tree를 어디까지 자라게 해야할까
  나눴을때 나눴을때 impurity가 높아지면 그만하면됨
 
 
-5:30초 까지 봄
+
+실제 regression 모델에서 tree 사용
+
+
+Regression 모델에서는 impurity는 곧 Variance이다
+하나의 feature에서 갈라진 variance를 weighted sum을 해주고 비교한다.
+ex) 하나의 feature로 오른쪽1개 왼쪽 10개로 나누어졌다면
+impurity =  Var(left) x (10/11) + Var(right) x (1/11)
+
+실제 모델에서 적용할 때는 feature로 정하는 숫자 ex) x>1 or x>2이렇게 연속적인 숫자들로 정해야한다 
+
+이때는 모든 연속적인 숫자들에 대해서 feature로 생각하여 inpurity가 가장 작은 놈으로 정한다
+
+전에 했던 decision tree 끝맺음과 마찬가지로 impurity가 더 작아지는 것이 아닌 커지면 그만한다 
+
+그래서 만약 x=20을 넣었을때 완성된 tree를 따라서 분류된 곳으로 갔을때 분류된 범위의 데이터들을 평균낸것이 x=20을 넣었을때 y값이다

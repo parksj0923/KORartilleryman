@@ -23,3 +23,99 @@
     
     # [[1 2 3 4]
        [9 10 11 12]]
+       
+3. pandas 
+    -파이썬 라이브러리
+    -구조화된 데이터를 효과적으로 처리하고 저장
+    -Array계산에 특화된 Numpy를 기반으로 설계
+    
+    
+3.1 pandas Series
+    -Numpy의 array가 보강된 형태
+    -data와 index를 가지고 있음
+            0    1
+    (index) 1    2  (data)
+            2    3
+            3    4
+            
+    -Series의 type은 pandas.core.series.Series
+    -series안의 값의 type은 ndarray
+    -데이터 type과 index를 지정할 수 있고 접근도 가능
+    data = pd.Series([1,2,3,4],dtype = "float",index = ['a','b','c','d']
+    
+    -dictionary를 활용하여 Series 생성가능
+    country_dict = {'korea' : 5180,'japan' : 12718,'china' : 141500,'usa' : 32676}
+    population = pd.Series(country_dict)
+    
+
+ 3.2 pandas DataFrame
+     -여러 개의 Series가 모여서 행과 열을 이룬 데이터
+     country = pd.DataFrame({'gdp':gdp(Series type), 'population':population(Seires type)})
+     
+     -Dictionary를 활용하여 DataFrame 생성가능
+     data = {'country':[a,b,c,d], 'gdp':[10,20,30,40],'pop':[100,200,300,400]}
+     country = pd.DataFrame(data)
+     이렇게 하면 index가 0,1,2,3으로 이루어진 data frame이 만들어진다
+     
+     여기서 country를 index로 하고 싶으면
+     country = country.set_index('country')라고 하면 된다
+     
+ 3.3 데이터 프레임 저장 및 불러오기 가능
+     country.to_csv('country.csv')
+     country.to_excel('country.xlsx')
+     
+     country = pd.read_csv('country.csv')
+     country = pd.read_excel('country.xlsx')
+    
+ 3.4 데이터 선택(indexing/slicing)
+     3.4.1 
+     .loc : 명시적인 인텍스를 참조하는 인덱싱/슬라이싱
+     country.loc['china']
+     =>index가 china인 값들을 보여줘라(해당하는 모든 컬럼값들을 보여줌)
+     
+     country.loc['japan':'korea', : 'population']
+     => ,앞에는 인덱스 뒤에는 컬럼을 의미
+     => japan부터 korea 까지, 처음 컬럼부터 population까지 출력해라
+     
+     3.4.2
+     .iloc : 파이썬 스타일의 정수 인덱스 인덱싱/슬라이싱(암묵적으로 순서가 있다고 생각하고 리스트 순서대로 뽑아냄)
+     country.iloc[0]
+     country.iloc[1:3,:2]
+     
+     3.4.3
+     컬럼명을 활용하여 DataFrame에서 데이터 선택가능
+     country['gdp']
+     => gdp컬럼명의 값들을 찾는다(Series 형태로 나옴)
+     (컬럼이 명시가 안돼서 나옴, 인덱스와 값만 있음)
+     country[['gdp']]
+     => gdp컬럼명의 값들을 찾는다 (DataFrame형태로 나옴)
+     (컬럼이 명시가 됨, 인덱스, 컬럼, 그 컬럼의 값)
+     
+     3.4.4 
+     조건을 안다면 masking 연산이나 query함수를 활용하여 조건에 맞는 DataFrame행 추출가능
+     country[country['population'] < 10000] # masking활용
+     country.query('population > 10000') #query활용
+     
+     3.4.5
+     Series도 numpy array처럼 연산자 활용가능
+     gdp_per_capita = country['gdp'] / country['population']
+     country['gdp per capita'] = gdp_per_capita #컬럼 추가
+     
+     3.4.6
+     리스트로 추가 or 딕셔너리로 추가 
+     df = pd.DataFrame(colums = ['이름','나이','주소'])  #데이터 프레임 생성
+     df.loc[0] = ['길동','25','서울']  # 리스트로 데이터 추가
+     df.loc[1] = {'이름':'철수','나이':'25','주소':'인천'} #딕셔너리로 데이터 추가
+     df.loc[1,'이름'] = '영희'  #명시적 인덱스를 활용하여 데이터 수정
+     
+     3.4.7
+     NaN값으로 초기화한 새로운 컬럼 추가 (nan = not a number)
+     df['전화번호'] = np.nan   #새로운 컬럼 추가 후 초기화
+     df.loc[0,'전화번호'] = '0102344556'
+     
+     3.4.8
+     DataFrame에서 컬럼 삭제후 원본 변경
+     df.drop('전화번호',axis = 1, inplace = True)   #컬럼삭제
+     # axis = 1 : 열 방향 / axis = 0 : 행 방향
+     # inplace = True : 원본 변경 / False : 원본변경 x
+    

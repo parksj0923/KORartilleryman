@@ -119,3 +119,44 @@
      # axis = 1 : 열 방향 / axis = 0 : 행 방향
      # inplace = True : 원본 변경 / False : 원본변경 x
     
+
+ 4 pandas advanced
+     4.1
+     index 값 기준으로 정렬하기
+     df = df.sort_index(axis = 0) # 행 인덱스 기준 정렬(default 오름차순)
+     df = df.sort_index(axis = 1, ascending = False) # 열 인덱스 기준 내림차순 정렬
+     df.sort_values('col1', ascending =True)  # col1 컬럼 기준 정렬(Default 오름차순)
+     df.sort_values('col1', ascending = False)
+     df.sort_values(['col2','col1'], ascending = [True,False]) #col2컬럼기준 오름차순 정렬후 col1기준 내림차순 정렬
+     
+     4.2
+     데이터 프레임 분석용 함수
+     
+     1. count : 열과 행의 데이터 개수를 확인가능하다(Default : NaN값 제외)
+     df.count(axis = 0)
+     df.count(axis = 1)
+     
+     2. max, min : 최대, 최솟값 확인 가능 (Default : 열 기준, NaN값 제외)
+     df.max(), df.min()
+     
+     3. sum, mean : 합계 및 평균 계산  (Default : 열 기준, NaN값 제외)
+     df.sum(), df.mean()
+     
+     3.1 axis, skipna인자를 활용하여 합계 및 평균 계산
+     df.sum(axis = 1)  #행기준
+     df.mean(axis =1, skipna = False)  # 행기준, NaN을 skip하지 않음
+     
+     3.2 평균을 구할때 NaN이 껴있으면 skipna=False했을때 nan이 뜬다 
+     이를 해결하기 위하여 NaN자리에 열 기준 평균값을 미리 넣고 행기준으로 구해주는 방식 등 으로 처리함
+     
+     4. 간단한 집계를 넘어서서 조건부로 집계하고 싶은 경우
+     df.groupby('열이름').sum() 
+     df.groupby('['열1','열2']).sum() #계층적으로 함
+     
+     4.1 aggregate ; groupby를 통해서 집계를 한번에 계산하는 방법
+     df.groupby('열이름').aggregate(['min',np.median,max])
+     df.groupby('열이름').aggregate({'열1':'min','열2':max})
+     
+     4.2 filter ; groupby를 통해서 그룹 속성을 기준으로 데이터 필터링
+     
+     

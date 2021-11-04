@@ -151,12 +151,18 @@
      
      4. 간단한 집계를 넘어서서 조건부로 집계하고 싶은 경우
      df.groupby('열이름').sum() 
-     df.groupby('['열1','열2']).sum() #계층적으로 함
+     df.groupby(['열1','열2']).sum() #계층적으로 함
      
      4.1 aggregate ; groupby를 통해서 집계를 한번에 계산하는 방법
      df.groupby('열이름').aggregate(['min',np.median,max])
      df.groupby('열이름').aggregate({'열1':'min','열2':max})
      
-     4.2 filter ; groupby를 통해서 그룹 속성을 기준으로 데이터 필터링
+     4.1.2 filter ; groupby를 통해서 그룹 속성을 기준으로 데이터 필터링
+     df.groupby('열이름').filter(함수)
      
+     4.1.3 apply,lambda ; groupby를 통해서 묶인 데이터에 함수 적용
+     df.groupby('열이름').apply(lambda x:x.함수())
+     
+     4.1.4 get_group ; groupby로 묶인 데이터에서 key값으로 데이터를 가져올 수 있다
+     df.groupby("열이름").get_group('이름')
      

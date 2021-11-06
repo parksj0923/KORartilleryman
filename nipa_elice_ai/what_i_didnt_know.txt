@@ -166,3 +166,15 @@
      4.1.4 get_group ; groupby로 묶인 데이터에서 key값으로 데이터를 가져올 수 있다
      df.groupby("열이름").get_group('이름')
      
+ 5. dataframe apply
+    dataframe의 경우 row or column별로 loop를 돌리면 매우 느리다.
+    따라서 apply를 통해서 벡터연산을 실행한다
+    
+ 6. dataframe의 열 접근
+    dataframe은 색인으로 컬럼에 접근할 수 있고('[]'), 속성으로(attribute)로 접근할 수 도 있다('.')
+ 
+ 7. isin([리스트])
+    특정열이 리스트안의 값을 포함하고 있는지 확인할때 사용
+    있으면 true 없으면 false를 dataframe 형식으로 리턴
+    boolean maksing으로 이용하면 됨
+ 

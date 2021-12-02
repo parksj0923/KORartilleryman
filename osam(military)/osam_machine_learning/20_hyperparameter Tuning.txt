@@ -1,0 +1,15 @@
+하이퍼 파라미터 
+사람이 바꿀수 있는 파라미터(learning rate, batch size 등)
+
+
+grid search 
+
+일정한 간격으로 하이퍼 파라미터를 정하고 하나하나 넣어보면서 결과를 확인한다.
+-table을 만들어서 진행하기도 함(x축 learning rate, y축 batch size)
+
+random search
+
+최대값과 최솟값 사이에서 랜덤으로 정해서 결정
+성능이 gird search보다 좋아서 많이 쓰이고 있음
+- Coarse to Fine : 큰 부분을 큼직하게 찾고 그 최소부분에서 더 미세하게 찾아가기
+ 

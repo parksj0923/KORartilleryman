@@ -1,0 +1,27 @@
+model accuary나 rmse err등 정확도를 올려주는 것도 중요하지만
+현실에서 inference time(forward propagation이 걸리는 시간)을 줄이는 것도 중요하다.
+(inferenc = 학습된 모델로 수행하는 과정)
+
+아키텍쳐는 바꾸지말고(아키텍쳐의 복잡도는 유지하고) inference time만 줄여보자는게
+model quantization의 시작
+
+Model Quantization
+- Model (weight/ operation)의 data의 datatype을 float32--> int8로 변경하여
+  model size 및 inference 속도를 개선시키는 방법
+  (32bit floating points --> 8 bit fixed pints)
+  
+  
+ 크게 2 가지의 quantization 방법 존재
+ 
+ 1. Quantize a pre-trained network
+     -이미 학습된 모델의 가중치 같은 것들을 float32에서 int8로 변경하는 것
+     -큼 모델에서 accuracy drop 이 크지 않고 잘 변환이 됨
+     -모델이 작으면 (weight 수가 작으면) accurary 변화가 크게 나타날 수 있음
+         - Outlier weight value에 의한 영향이 큼
+
+ 2. Quantization-aware Training(QAT)
+     - Weight를 학습하는 동시에 quantization
+     -모델안에 floating point layer와 int8 layer가 함꼐 있기 때문에 
+      학습이 끝난 후 int8 모델로 변환 가능
+     - Pre-trained weight를 quantization한 것보다 높은 accuracy 확보 가능
+     

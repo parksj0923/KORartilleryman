@@ -1,0 +1,52 @@
+Deployment on backend vs edge-devices
+
+ - backend deployment : 개발한 SW/ML model등을 사용자가 접속하는 서버에 배포하는 방식
+ - Edge-device deployment : 사용자가 사용하는 기기에 배포하는 방식 
+ 
+backend
+    - 장점 : 
+        -배포한 서버에서 잘 동작하는지만 검증되면 됨
+        -테스트 및 모델 최적화가 용이함
+        -사용자가 사용하는 개별 기기를 신경쓸 필요가 없음
+    - 단점 :
+        -Latency가 큼
+        -서버 운영 비용이 큼
+Edge-device 
+    - 장점 :
+        -연산을 사용자의 기기에서 하므로 서비스 운영비용 감소에 도움이 됨
+        -사용자 기기에서 연산이 충분히 빠르다면 latency를 크게 단축시킬 수 있음
+    - 단점 :
+        -사용자의 다양한 기기에서 테스트/검증이 필요함
+        -x86이 아닌 ARM기반 CPU에서 잘 동작 할 수 있도록 별도의 모델 변환, 최적화가 필요할 수 있음
+        
+        
+        
+REST (Representational State Transfer)
+- 클라이언트와 서버 사이의 통신 방식 중 하나
+- 클라이언트, 서버로 구성되어 있으며 요청이 http protocol을 통해 관리되는 구조
+- http method(POST, GET, PUT, DELETE)를 통해 서버에 특정 operation을 요청한 후 응답을 받음
+- 요청 간의 클라이언트 상태(state)가 저장되지 않음(각 요청을 독립적으로 수행)
+- 서버의 다양한 구성 요소(보안, 로드밸런싱 등)을 클라이언트가 볼 수 없도록 계층화됨
+- 모듈화, 빠르고 경량화되어 모바일 앱 개발에 보편적으로 사용됨
+
+RESTful
+- REST 구조를 구현하는 웹서비스를 나타내기 위해 사용되는 용어
+- REST API를 제공하는 웹서비스를 RESTful하다 라고 표현함
+
+
+REST API Basic Request
+
+  Client --- data -----> Server ----> Model --- Result --> Server ---> Client
+
+REST API -Cache
+(전에 연산했던 데이터가 똑같이 들어오면 cache에서 바로 결과를 보내줘서 처리 속도를 빠르게 함)
+
+  Client --- data ----> Cache(server) ----> Server ---> Model -- Result --> Server --> Cache --> Client
+  
+REST API -DB
+(inference하는게 부담스러운 경우 미리 들어올 data를 예측해서 결과를 만들어 db에 저장시켜놓고 필요할 때 내보내기)
+  Client --- data ---> Server ---> DB ---> Server---> Client
+                                   ^
+                   data--->model-->|
+                   
+  

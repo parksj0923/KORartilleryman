@@ -36,7 +36,8 @@
     
 -train_mask_detector.py:
 
-    마스크 사진 dataset을 통하여 MobileNetV2를 학습시키기 위한 파일
+    마스크 사진 dataset을 통하여 모델을 학습시키기 위한 파일
+    MobileNetV2를 basemodel로 하여 transfer learning을 하였음
     learing rate: 1e-4
     epoch: 20
     batch size: 32 로 하여 
